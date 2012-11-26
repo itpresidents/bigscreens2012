@@ -59,8 +59,8 @@ public class Stage {
 		boundaries.add(new Boundary(parent, box2d, Gummies.mWidth / 2,
 				Gummies.mHeight / 2));
 		
-		// create the water
-		water = new Water(parent, box2d);
+		// create the water - turned off for now.
+//		water = new Water(parent, box2d);
 		
 		  // load up black box pshapes
 		  bigfileb = parent.loadShape("bigfile3b.svg");
@@ -154,8 +154,9 @@ public class Stage {
 				}
 			}
 		
-		// display water
-		water.display();
+		// display water - turned off for now.
+//		water.display();
+//		water.update();
 	}
 
 	void launchGummies() {

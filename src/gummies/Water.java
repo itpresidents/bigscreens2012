@@ -16,10 +16,13 @@ class Water {
 
 	PApplet parent;
 	PBox2D box2d;
+	
+	float counter;
 
 	Water(PApplet p, PBox2D box2d_) {
 		parent = p;
 		box2d = box2d_;
+		counter = (float) 0.0;
 		
 		// make a chain of water surface
 		
@@ -71,16 +74,21 @@ class Water {
 	    parent.beginShape();
 	    for (Vec2 v: surface) {
 	    	parent.vertex(v.x,v.y);
-//	    	parent.noFill();
-//	    	parent.stroke(0,0,255);
-//	    	parent.rect(v.x,v.y,1,Gummies.mHeight);
 	    }
 	    parent.endShape();
+	}
+	
+	void update() {
+		
+	    float theta = counter;
 	    
-//	    for (Vec2 v: surface) {
-//	    	parent.noFill();
-//	    	parent.stroke(0,0,255);
-//	    	parent.rect(v.x,v.y,1,Gummies.mHeight);
-//	    }
+	    for(int i = 0; i < surface.size(); i++){
+		    float y = parent.map(parent.cos(theta),-1,1,Gummies.mHeight-100,Gummies.mHeight);
+		    theta += 0.15;
+	    	surface.get(i).y = y;
+	    }
+	    
+	    counter += 0.01;
+
 	}
 }
