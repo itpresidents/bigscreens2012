@@ -10,7 +10,7 @@ import processing.core.*;
 public class SVGbox {
 	PApplet parent;
 
-	// We need to keep track of a Body and a width and height
+	// We need to keep track of a Body and a width and height and color
 	Body body;
 	float w;
 	float h;
@@ -20,14 +20,14 @@ public class SVGbox {
 	PBox2D box2d;
 
 	// Constructor
-	SVGbox(PApplet p, PBox2D box2d_, float x, float y, float _w, float _h, float _c) {
+	SVGbox(PApplet p, PBox2D box2d_, PShape s, float _c) {
 		parent = p;
 		box2d = box2d_;
-		w = _w;
-		h = _h;
+		w = s.getParam(2);
+		h = s.getParam(3);
 		c = _c;
 		// Add the box to the box2d world
-		makeBody(new Vec2(x, y), w, h);
+		makeBody(new Vec2(s.getParam(0), s.getParam(1)), w, h);
 	}
 
 	// This function removes the particle from the box2d world

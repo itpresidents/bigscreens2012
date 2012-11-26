@@ -28,8 +28,6 @@ public class Stage {
 	
 	// create boxes derived from svg file
 	PShape bigfileb, bigfilew;
-	PShape[] bigBoxesb;
-	PShape[] bigBoxesw;
 
 	// make boxes from pshapes
 	ArrayList <SVGbox> svgboxes;
@@ -70,32 +68,25 @@ public class Stage {
 		  // load up white box pshapes
 		  bigfilew = parent.loadShape("bigfile3w.svg");
 
-		  // get children
-		  bigBoxesb = bigfileb.getChildren();
-		  bigBoxesw = bigfilew.getChildren();
-
-
 		  // get some info on our file
 		  // since we know it's a rect, the parameters are x,y,width,height
-		  //  println("square");
-		  parent.println("black boxes");
-		  parent.println(bigfileb.getChildCount());
-		  parent.println(bigBoxesb[0].getParams());  
-		  parent.println("white boxes");
-		  parent.println(bigfilew.getChildCount());
-		  parent.println(bigBoxesw[0].getParams());
-		  parent.println();
+//		  parent.println("black boxes");
+//		  parent.println(bigfileb.getChildCount()); 
+//		  parent.println("white boxes");
+//		  parent.println(bigfilew.getChildCount());
+
 		  
 		  //create boxes from square
 		  svgboxes = new ArrayList<SVGbox>();
-
+		  
+		  // send pshapes to the arraylist of SVGbox
 		  for (int i = 0; i < bigfileb.getChildCount(); i ++) {
-		    SVGbox bx = new SVGbox(parent, box2d, (float)bigBoxesb[i].getParam(0), (float)bigBoxesb[i].getParam(1), bigBoxesb[i].getParam(2), bigBoxesb[i].getParam(3), (float)0);
+			SVGbox bx = new SVGbox(parent, box2d, bigfileb.getChild(i), (float)0);
 		    svgboxes.add(bx);
 		  }
 
 		  for (int i = 0; i < bigfilew.getChildCount(); i ++) {
-			SVGbox bx = new SVGbox(parent, box2d, (float)bigBoxesw[i].getParam(0), (float)bigBoxesw[i].getParam(1), bigBoxesw[i].getParam(2), bigBoxesw[i].getParam(3), 255);
+			SVGbox bx = new SVGbox(parent, box2d, bigfilew.getChild(i), 255);
 		    svgboxes.add(bx);
 		  }
 	}
