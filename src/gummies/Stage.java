@@ -1,17 +1,9 @@
 package gummies;
 
-import java.util.ArrayList;
-import pbox2d.*;
-import org.jbox2d.common.*;
-import org.jbox2d.dynamics.joints.*;
-import org.jbox2d.collision.shapes.*;
-import org.jbox2d.collision.shapes.Shape;
-import org.jbox2d.common.*;
-import org.jbox2d.dynamics.*;
+import java.util.*;
 
-import processing.core.PApplet;
-import processing.core.PImage;
-import processing.core.PVector;
+import pbox2d.*;
+import processing.core.*;
 
 public class Stage {
 	PApplet parent;
@@ -30,6 +22,17 @@ public class Stage {
 	ArrayList<Boundary> boundaries;
 	// A list for all of our rectangles
 	ArrayList<Box> boxes;
+	
+	// create water line
+	Water water;
+	
+	// create boxes derived from svg file
+	PShape bigfileb, bigfilew;
+	PShape[] bigBoxesb;
+	PShape[] bigBoxesw;
+
+	// make boxes from pshapes
+	ArrayList <SVGbox> svgboxes;
 	
 	// Define altitude and light source for shadows
 	public static float alt = Gummies.mHeight;
@@ -57,6 +60,44 @@ public class Stage {
 		// Add a bunch of fixed boundaries
 		boundaries.add(new Boundary(parent, box2d, Gummies.mWidth / 2,
 				Gummies.mHeight / 2));
+		
+		// create the water
+		water = new Water(parent, box2d);
+		
+		  // load up black box pshapes
+		  bigfileb = parent.loadShape("bigfile3b.svg");
+
+		  // load up white box pshapes
+		  bigfilew = parent.loadShape("bigfile3w.svg");
+
+		  // get children
+		  bigBoxesb = bigfileb.getChildren();
+		  bigBoxesw = bigfilew.getChildren();
+
+
+		  // get some info on our file
+		  // since we know it's a rect, the parameters are x,y,width,height
+		  //  println("square");
+		  parent.println("black boxes");
+		  parent.println(bigfileb.getChildCount());
+		  parent.println(bigBoxesb[0].getParams());  
+		  parent.println("white boxes");
+		  parent.println(bigfilew.getChildCount());
+		  parent.println(bigBoxesw[0].getParams());
+		  parent.println();
+		  
+		  //create boxes from square
+		  svgboxes = new ArrayList<SVGbox>();
+
+		  for (int i = 0; i < bigfileb.getChildCount(); i ++) {
+		    SVGbox bx = new SVGbox(parent, box2d, (float)bigBoxesb[i].getParam(0), (float)bigBoxesb[i].getParam(1), bigBoxesb[i].getParam(2), bigBoxesb[i].getParam(3), (float)0);
+		    svgboxes.add(bx);
+		  }
+
+		  for (int i = 0; i < bigfilew.getChildCount(); i ++) {
+			SVGbox bx = new SVGbox(parent, box2d, (float)bigBoxesw[i].getParam(0), (float)bigBoxesw[i].getParam(1), bigBoxesw[i].getParam(2), bigBoxesw[i].getParam(3), 255);
+		    svgboxes.add(bx);
+		  }
 	}
 
 	void run() {
@@ -106,6 +147,24 @@ public class Stage {
 				boxes.remove(i);
 			}
 		}
+		
+		//display our svgboxes
+		  for (int i = 0; i < svgboxes.size(); i++) {
+		    SVGbox bx = svgboxes.get(i);
+		    bx.display();
+		  }
+		  
+			// Boxes that leave the screen, we delete them
+			// (note they have to be deleted from both the box2d world and our list
+			for (int i = svgboxes.size() - 1; i >= 0; i--) {
+				SVGbox b = svgboxes.get(i);
+				if (b.done()) {
+					svgboxes.remove(i);
+				}
+			}
+		
+		// display water
+		water.display();
 	}
 
 	void launchGummies() {
