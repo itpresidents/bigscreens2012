@@ -25,6 +25,7 @@ public class Stage {
 	
 	// create water line
 	Water water;
+	Circle circle;
 	
 	// create boxes derived from svg file
 	PShape bigfileb, bigfilew;
@@ -59,9 +60,9 @@ public class Stage {
 		boundaries.add(new Boundary(parent, box2d, Gummies.mWidth / 2,
 				Gummies.mHeight / 2));
 		
-		// create the water - turned off for now.
-//		water = new Water(parent, box2d);
-		
+		// create the water 
+		water = new Water(parent, box2d);
+		circle = new Circle(parent,box2d,Gummies.mWidth/2,Gummies.mHeight/2,100);
 		  // load up black box pshapes
 		  bigfileb = parent.loadShape("bigfile3b.svg");
 
@@ -154,9 +155,10 @@ public class Stage {
 				}
 			}
 		
-		// display water - turned off for now.
-//		water.display();
+		// display water
+		water.display();
 //		water.update();
+			circle.display();
 	}
 
 	void launchGummies() {
