@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/core_2.0b3.jar"/>
+	<classpathentry kind="lib" path="lib/core_2.0b3.jar" sourcepath="lib/core_2.0b3.jar"/>
 	<classpathentry kind="lib" path="lib/jna.jar"/>
 	<classpathentry kind="lib" path="lib/video/gstreamer-java.jar"/>
 	<classpathentry kind="lib" path="lib/video/video.jar"/>
