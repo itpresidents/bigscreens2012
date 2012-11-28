@@ -28,7 +28,11 @@ public class Stage {
 	Water water;
 
 	// create boxes derived from svg file
-	PShape bigfileb, bigfilew;
+//	PShape bigfileb, bigfilew;
+	PShape bb, bw, bfloor;
+	
+	// make boundaries from bfloor
+	ArrayList<SVGboundary> svgfloor;
 
 	// make boxes from pshapes
 	ArrayList<SVGbox> svgboxes;
@@ -58,25 +62,37 @@ public class Stage {
 
 		// Create the water
 		water = new Water(parent, box2d);
+		
+		// load up floor pshapes
+		bfloor = parent.loadShape("bfloor.svg");
 
 		// Load up black box pshapes
-		bigfileb = parent.loadShape("bigfile3b.svg");
+		bb = parent.loadShape("bb.svg");
 
 		// Load up white box pshapes
-		bigfilew = parent.loadShape("bigfile3w.svg");
-
+		bw = parent.loadShape("bw.svg");
+		
+		// create arraylist of boundaries based on bfloor
+		svgfloor = new ArrayList<SVGboundary>();
+		
+//		// Send pshapes to the arraylist of SVGfloor
+//		for (int i = 0; i < bfloor.getChildCount(); i++) {
+//			SVGboundary fl = new SVGboundary(parent, box2d, bfloor.getChild(i));
+//			svgfloor.add(fl);
+//		}
+		
 		// Create boxes from square
 		svgboxes = new ArrayList<SVGbox>();
-
+		
 		// Send pshapes to the arraylist of SVGbox
-		for (int i = 0; i < bigfileb.getChildCount(); i++) {
-			SVGbox bx = new SVGbox(parent, box2d, bigfileb.getChild(i),
+		for (int i = 0; i < bb.getChildCount(); i++) {
+			SVGbox bx = new SVGbox(parent, box2d, bb.getChild(i),
 					(float) 0);
 			svgboxes.add(bx);
 		}
 
-		for (int i = 0; i < bigfilew.getChildCount(); i++) {
-			SVGbox bx = new SVGbox(parent, box2d, bigfilew.getChild(i), 255);
+		for (int i = 0; i < bw.getChildCount(); i++) {
+			SVGbox bx = new SVGbox(parent, box2d, bw.getChild(i), 255);
 			svgboxes.add(bx);
 		}
 	}
@@ -101,25 +117,31 @@ public class Stage {
 		// We must always step through time!
 		box2d.step();
 
-		// Boxes fall from the top every so often
-		if (parent.random(1) < .05) {
-			Box p = new Box(parent, box2d, parent.random(Gummies.mWidth), 30);
-			boxes.add(p);
-		}
+//		// Boxes fall from the top every so often
+//		if (parent.random(1) < .05) {
+//			Box p = new Box(parent, box2d, parent.random(Gummies.mWidth), 30);
+//			boxes.add(p);
+//		}
 
-		// Display all the boxes
-		for (Box box : boxes) {
-			box.display();
-		}
+//		// Display all the boxes
+//		for (Box box : boxes) {
+//			box.display();
+//		}
 
-		// Boxes that leave the screen, we delete them
-		// (note they have to be deleted from both the box2d world and our list
-		for (int i = boxes.size() - 1; i >= 0; i--) {
-			Box b = boxes.get(i);
-			if (b.done()) {
-				boxes.remove(i);
-			}
-		}
+//		// Boxes that leave the screen, we delete them
+//		// (note they have to be deleted from both the box2d world and our list
+//		for (int i = boxes.size() - 1; i >= 0; i--) {
+//			Box b = boxes.get(i);
+//			if (b.done()) {
+//				boxes.remove(i);
+//			}
+//		}
+		
+//		// Display our svgfloor
+//		for (int i = 0; i < svgfloor.size(); i++) {
+//			SVGboundary fl = svgfloor.get(i);
+//			fl.display();
+//		}
 
 		// Display our svgboxes
 		for (int i = 0; i < svgboxes.size(); i++) {

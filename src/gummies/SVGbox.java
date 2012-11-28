@@ -23,8 +23,8 @@ public class SVGbox {
 	SVGbox(PApplet p, PBox2D box2d_, PShape s, float _c) {
 		parent = p;
 		box2d = box2d_;
-		w = s.getParam(2);
-		h = s.getParam(3);
+		w = 100;
+		h = 100;
 		c = _c;
 		// Add the box to the box2d world
 		makeBody(new Vec2(s.getParam(0), s.getParam(1)), w, h);
@@ -77,7 +77,7 @@ public class SVGbox {
 		FixtureDef fd = new FixtureDef();
 		fd.shape = sd;
 		// Parameters that affect physics
-		fd.density = 1000;
+		fd.density = 1;
 		fd.friction = (float) 0.3;
 		fd.restitution = (float) 0.5;
 
@@ -89,10 +89,6 @@ public class SVGbox {
 		body = box2d.createBody(bd);
 		body.createFixture(fd);
 
-		// Give it some initial random velocity
-		body.setLinearVelocity(new Vec2(parent.random(-50, 50), parent.random(
-				-5000, -10000 )));
-		body.setAngularVelocity(parent.random(-50, 50));
 	}
 
 }
