@@ -26,6 +26,9 @@ public class Stage {
 
 	// create water line
 	Water water;
+	
+	// make a huge Meteor
+	Meteor meteor;
 
 	// create boxes derived from svg file
 	PShape bb, bw, bfloor;
@@ -88,12 +91,14 @@ public class Stage {
 			SVGbox bx = new SVGbox(parent, box2d, bw.getChild(i), 255);
 			svgboxes.add(bx);
 		}
+		
+		meteor = new Meteor(parent, box2d, Gummies.mWidth/2, 0-Gummies.mHeight*2, 200);
 	}
 
 	void run() {
 
 		if (bears.size() < 100)
-			launchGummies();
+			//launchGummies();
 
 		parent.image(sky, 0, 0, Gummies.mWidth, Gummies.mHeight);
 
@@ -127,7 +132,10 @@ public class Stage {
 
 		// Display water
 		water.display();
-		water.update();
+		//water.update();
+		
+		// display meteor
+		meteor.display();
 	}
 
 	void launchGummies() {
