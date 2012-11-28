@@ -65,7 +65,7 @@ public class SVGbox {
 	}
 
 	// This function adds the rectangle to the box2d world
-	void makeBody(Vec2 center, float w_, float h_) {
+	void makeBody(Vec2 corner, float w_, float h_) {
 
 		// Define a polygon (this is what we use for a rectangle)
 		PolygonShape sd = new PolygonShape();
@@ -77,13 +77,16 @@ public class SVGbox {
 		FixtureDef fd = new FixtureDef();
 		fd.shape = sd;
 		// Parameters that affect physics
-		fd.density = 1;
+		fd.density = 1000;
 		fd.friction = (float) 0.3;
 		fd.restitution = (float) 0.5;
 
 		// Define the body and make it from the shape
 		BodyDef bd = new BodyDef();
 		bd.type = BodyType.DYNAMIC;
+		
+		// move it to real center
+		Vec2 center = new Vec2(corner.x+(w_ /2),corner.y+(h_ /2));
 		bd.position.set(box2d.coordPixelsToWorld(center));
 
 		body = box2d.createBody(bd);

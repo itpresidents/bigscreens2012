@@ -28,7 +28,6 @@ public class Stage {
 	Water water;
 
 	// create boxes derived from svg file
-//	PShape bigfileb, bigfilew;
 	PShape bb, bw, bfloor;
 	
 	// make boundaries from bfloor
@@ -74,13 +73,7 @@ public class Stage {
 		
 		// create arraylist of boundaries based on bfloor
 		svgfloor = new ArrayList<SVGboundary>();
-		
-//		// Send pshapes to the arraylist of SVGfloor
-//		for (int i = 0; i < bfloor.getChildCount(); i++) {
-//			SVGboundary fl = new SVGboundary(parent, box2d, bfloor.getChild(i));
-//			svgfloor.add(fl);
-//		}
-		
+
 		// Create boxes from square
 		svgboxes = new ArrayList<SVGbox>();
 		
@@ -116,32 +109,6 @@ public class Stage {
 
 		// We must always step through time!
 		box2d.step();
-
-//		// Boxes fall from the top every so often
-//		if (parent.random(1) < .05) {
-//			Box p = new Box(parent, box2d, parent.random(Gummies.mWidth), 30);
-//			boxes.add(p);
-//		}
-
-//		// Display all the boxes
-//		for (Box box : boxes) {
-//			box.display();
-//		}
-
-//		// Boxes that leave the screen, we delete them
-//		// (note they have to be deleted from both the box2d world and our list
-//		for (int i = boxes.size() - 1; i >= 0; i--) {
-//			Box b = boxes.get(i);
-//			if (b.done()) {
-//				boxes.remove(i);
-//			}
-//		}
-		
-//		// Display our svgfloor
-//		for (int i = 0; i < svgfloor.size(); i++) {
-//			SVGboundary fl = svgfloor.get(i);
-//			fl.display();
-//		}
 
 		// Display our svgboxes
 		for (int i = 0; i < svgboxes.size(); i++) {
