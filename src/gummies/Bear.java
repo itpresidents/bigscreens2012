@@ -96,7 +96,7 @@ public class Bear {
 		float xAnchor = dir * parent.noise(Stage.t + parent.random(10))
 				* screenWidth * -1;
 		float k = dir * parent.noise(Stage.t + parent.random(100))
-				* parent.noise(Stage.t) * parent.random(0.05f);
+				* parent.noise(Stage.t) * parent.random(0.01f);
 		spring = new Spring(parent, xAnchor, k);
 
 		// Create shadow
@@ -237,6 +237,7 @@ public class Bear {
 		    parent.rotate(a);
 		    parent.fill(175);
 		    parent.stroke(0);
+		    parent.image(gummy, 0,0,width,height);
 		    parent.popMatrix();
 		  }
 

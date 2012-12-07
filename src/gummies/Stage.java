@@ -23,7 +23,6 @@ public class Stage {
 	PImage skyline;
 	int skyWidth;
 	int skyHeight;
-	boolean multiLineTitle;
 
 	// Credits
 	Sign centerSign;
@@ -60,48 +59,28 @@ public class Stage {
 		parent = parent_;
 		t = PApplet.parseInt(parent.random(1000));
 
-		// Load settings file
-		loadSettings();
+		// Create skyline
+		initSkyline(-1);
 
 		// Create wind
-		gummyMask = parent.loadImage("gummy_mask.jpg");
+		gummyMask = parent.loadImage("data/gummy_mask.jpg");
 
 		for (int i = 0; i < gummyImgs.length; i++) {
-			gummyImgs[i] = parent.loadImage("gummy_" + i + ".jpg");
+			gummyImgs[i] = parent.loadImage("data/gummy_" + i + ".jpg");
 			gummyImgs[i].mask(gummyMask);
 		}
 
-		// Initialize box2d physics and create the world
-		box2d = new PBox2D(parent);
-		box2d.createWorld();
-
-		// Create the water
-		water = new Water(parent, box2d, settings);
-
-		// Create skyline
-		initSkyline();
-
-		Vec2 centerSignPos = new Vec2(Gummies.mWidth / 2, Gummies.mHeight / 2);
-		float tilt = PApplet.PI / 36;
-		float titleYOffset = 0;
-		float namesYOffset = 160;
-		float titleTextSize = 256;
-		float namesTextSize = 128;
-		PFont font = parent.createFont("data/AuXDotBitC.ttf", 540);
-		float res = 50;
-		float margin = 100;
-		float signHeight = 500;
-		centerSign = new Sign(parent, box2d, settings, centerSignPos, tilt,
-				titleYOffset, namesYOffset, titleTextSize, namesTextSize,
-				multiLineTitle, font, res, margin, signHeight);
-
+		// Load settings file
+		// Create signs
+		init(0);
 	}
 
 	void run() {
-
+		parent.background(255);
 		// Draw the skyline
-		parent.image(skyline, -300, -Gummies.mHeight / 2, skyWidth, skyHeight);
-
+		parent.image(skyline, 0, 0, skyWidth, skyHeight);
+		
+		
 		// Blow the wind
 		launchGummies();
 
@@ -141,56 +120,59 @@ public class Stage {
 			t += parent.random(-1, 5);
 		}
 	}
+	
+	void init(int whichPiece) {
+		String[] data = parent.loadStrings("data/settings.txt");
 
-	void loadSettings() {
-		String[] data = parent.loadStrings("settings.txt");
-		String delim = ": ";
-		String[] title = data[0].split(delim)[1].split("_");
+		String[] thisPiece = new String [8];
+		int start = whichPiece*9;
+		for(int i = 0; i < thisPiece.length; i++) {
+			thisPiece[i] = data[start];
+			start++;
+		}
+		
+		// Create Settings
+		settings = new Settings(parent, thisPiece);
+		
+		// Initialize box2d physics and create the world
+		box2d = new PBox2D(parent);
+		box2d.createWorld();
+		
+		// Create Sign
+		Vec2 centerSignPos = new Vec2(Gummies.mWidth / 2, Gummies.mHeight / 2 - 200);
+		float tilt = PApplet.PI / 72;
+		float titleYOffset = 10;
+		float namesYOffset = 180;
+		float titleTextSize = 256;
+		float namesTextSize = 128;
+		PFont font = parent.createFont("data/comicSansBold.ttf", 540);
+		float res = 50;
+		float margin = 100;
+		float signHeight = 500;
+		int color = parent.color(255,100,50); 
+		centerSign = new Sign(parent, box2d, settings, centerSignPos, tilt,
+				titleYOffset, namesYOffset, titleTextSize, namesTextSize,
+				font, res, margin, signHeight, color);
+		
+		// Create the water
+		water = new Water(parent, box2d, settings);
 
-		// Check to see if title is multi-line
-		if (title.length > 1)
-			multiLineTitle = true;
-
-		String names = data[1].split(delim)[1];
-		float floodStart = PApplet.parseFloat(data[2].split(delim)[1]);
-		float floodEnd = PApplet.parseFloat(data[3].split(delim)[1]);
-		float floodRate = PApplet.parseFloat(data[4].split(delim)[1]);
-		float waveHeight = PApplet.parseFloat(data[5].split(delim)[1]);
-		float launchRate = PApplet.parseFloat(data[6].split(delim)[1]);
-		float decayRate = PApplet.parseFloat(data[7].split(delim)[1]);
-
-		settings = new Settings(parent, title, names, floodStart, floodEnd,
-				floodRate, waveHeight, launchRate, decayRate);
-
+		// Clear out all the bears
+		bears.clear();
 	}
+	
+	void initSkyline(int whichSkyline) {
+		skyWidth = PApplet.parseInt(Gummies.mWidth);
+		skyHeight = PApplet.parseInt(Gummies.mHeight);
 
-	void initSkyline() {
-		skyline = parent.loadImage("data/skyline.jpg");
-		skyWidth = PApplet.parseInt(1.05f * Gummies.mWidth);
-		skyHeight = PApplet.parseInt(1.7f * Gummies.mHeight);
-		// skyline.resize(skyWidth, skyHeight);
-		// skyline.loadPixels();
-		// for (int i = 0; i < skyline.width; i++) {
-		// for (int j = 0; j < skyline.height; j++) {
-		// int loc = i + j*skyline.width;
-		// int c = skyline.get(i, j);
-		// float bright = parent.brightness(c);
-		// if (bright > 100) {
-		// float dynamicFill = PApplet.map(j, 2 * (skyWidth / 3), skyHeight,
-		// 200, 0);
-		// skyline.pixels[loc] = parent.color(dynamicFill);
-		// }
-		// }
-		// }
-		// skyline.updatePixels();
-	}
-
-	void updateSkyline(int whichSkyline) {
 		if (whichSkyline == -1)
-			skyline = parent.loadImage("data/skyline.jpg");
+			skyline = parent.loadImage("data/sky.jpg");
 		else if (whichSkyline == 0)
 			skyline = parent.loadImage("data/skyline-masked.jpg");
-		else if (whichSkyline == 1)
-			skyline = parent.loadImage("data/skyline-saved.jpg");
+		else if (whichSkyline == 1) {
+			skyline = parent.loadImage("data/skyline_futz.jpg");
+			skyWidth = PApplet.parseInt(Gummies.mWidth);
+			skyHeight = PApplet.parseInt(Gummies.mHeight);
+		}
 	}
 }

@@ -16,13 +16,13 @@ public class SignBox {
 	float w;
 	float h;
 	float tilt;
-	float color;
+	int color;
 
 	// A reference to our box2d world
 	PBox2D box2d;
 
 	// Constructor
-	SignBox(PApplet p, PBox2D box2d_, Vec2 pos, float _res, float _tilt, float _color) {
+	SignBox(PApplet p, PBox2D box2d_, Vec2 pos, float _res, float _tilt, int _color) {
 		parent = p;
 		box2d = box2d_;
 		initPos = pos;

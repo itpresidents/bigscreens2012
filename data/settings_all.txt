@@ -25,7 +25,7 @@ waveHeight: 90
 launchRate: 10
 decayRate: .1
 
-title: No. 787,412_Art of Transmitting Electrical Energy Through the Natural medium
+title: No. 382,280._Electrical Transmission of Power
 names: Amik Ahmad, Alex Samoilescu, Roopa Vasudevan 
 floodStart: 800
 floodEnd: 830

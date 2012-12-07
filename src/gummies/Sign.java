@@ -20,8 +20,9 @@ public class Sign {
 	float namesYOffset;
 	float titleTextSize;
 	float namesTextSize;
-	boolean multiLineTitle;
 	PFont font;
+	
+	int color;
 
 	// Make boxes from pshapes
 	ArrayList<SignBox> signboxes = new ArrayList<SignBox>();
@@ -30,7 +31,7 @@ public class Sign {
 	float signHeight;
 
 	Sign(PApplet p, PBox2D _box2d, Settings s, Vec2 c, float t, float tYO,
-			float nYO, float tTS, float nTS, boolean mLT, PFont f, float r, float m, float sH) {
+			float nYO, float tTS, float nTS, PFont f, float r, float m, float sH, int col) {
 		parent = p;
 		box2d = _box2d;
 		settings = s;
@@ -43,12 +44,13 @@ public class Sign {
 		
 		titleTextSize = tTS;
 		namesTextSize = nTS;
-		multiLineTitle = mLT;
 		font = f;
 
 		res = r;
 		margin = m;
 		signHeight = sH;
+		
+		color = col;
 		
 		init();
 	}
@@ -70,10 +72,12 @@ public class Sign {
 
 		// Test for multi-line title and re-adjust sign width and height
 		// accordingly
-		if (multiLineTitle) {
+		if (settings.isTitleMultiline) {
 			parent.textSize(namesTextSize);
 			titleWidth = PApplet.parseInt(parent.textWidth(settings.title[1]));
 			signHeight *= 1.15f;
+			titleYOffset = -80;
+			namesYOffset = 80;
 		}
 
 		float leftMargin = margin*.25f;
@@ -83,8 +87,6 @@ public class Sign {
 		// Calculate center of sign
 		Vec2 signCenter = new Vec2(signWidth / 2 - leftMargin, signHeight / 2);
 
-		// How much to tilt the sign
-		float color = 0;
 
 		for (int col = 0; col <= signWidth; col += res) {
 			for (int row = 0; row < signHeight; row += res) {
@@ -122,7 +124,9 @@ public class Sign {
 			}
 			bx.display();
 		}
-		parent.stroke(0);
+		
+		//Sign stick
+		parent.stroke(color);
 		parent.strokeWeight(100);
 		parent.line(center.x, center.y, center.x - 100,
 				Gummies.mHeight);
@@ -143,13 +147,13 @@ public class Sign {
 		parent.translate(center.x, center.y);
 		parent.rotate(tilt);
 		parent.fill(255);
-		if (multiLineTitle) {
+		if (settings.isTitleMultiline) {
 			parent.textSize(titleTextSize);
 			parent.text(settings.title[0], 0, titleYOffset);
 			parent.textSize(namesTextSize);
 			parent.text(settings.title[1], 0, namesYOffset);
 			parent.textSize(namesTextSize);
-			parent.text(settings.names, 0, namesYOffset * 2);
+			parent.text(settings.names, 0, namesYOffset * 3);
 
 		} else {
 			parent.textSize(titleTextSize);

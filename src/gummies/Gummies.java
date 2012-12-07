@@ -9,52 +9,56 @@ package gummies;
 
 import java.util.ArrayList;
 
-
 import mpe.client.*;
 
 import processing.core.*;
 import processing.opengl.*;
 
-
 public class Gummies extends PApplet {
-	
+
 	// Set it to 1 for actual size, 0.5 for half size, etc.
-	// This is useful for testing MPE locally and scaling it down to fit to your screen
+	// This is useful for testing MPE locally and scaling it down to fit to your
+	// screen
 	public static float scale = 1.0f;
 
-	// if this is true, it will use the MPE library, otherwise just run stand-alone
+	// if this is true, it will use the MPE library, otherwise just run
+	// stand-alone
 	public static boolean MPE = true;
 	public static boolean local = false;
 
 	// Client ID
 	// Should be adjusted only for "local" testing
-	//--------------------------------------
+	// --------------------------------------
 	int ID = 0;
-	
+
 	TCPClient client;
 
-	// These we'll use for master width and height instead of Processing's built-in variables
+	// These we'll use for master width and height instead of Processing's
+	// built-in variables
 	public static int mWidth;
 	public static int mHeight;
-	
+
 	Stage stage;
-	
-	
+	int whichPiece = 0;
+	int pWhichPiece = 0;
+	int whichSkyline = -1;
+	int pWhichSkyline = -1;
 
-
-	//--------------------------------------
+	// --------------------------------------
 	static public void main(String args[]) {
 		// Windowed
 		if (local) {
-			PApplet.main(new String[] {"gummies.Gummies" });
-		// FullScreen Exclusive Mode
+			PApplet.main(new String[] { "gummies.Gummies" });
+			// FullScreen Exclusive Mode
 		} else {
-			PApplet.main(new String[] {"--present", "gummies.Gummies" });
+			PApplet.main(new String[] { "--present", "gummies.Gummies" });
 		}
 	}
 
-	//--------------------------------------
+	// --------------------------------------
 	public void setup() {
+		
+		//thread("therealsetup");
 
 		// If we are using the library set everything up
 		if (MPE) {
@@ -70,20 +74,23 @@ public class Gummies extends PApplet {
 			client = new TCPClient(path, this);
 			// Not rendering with OPENGL for local testing
 			if (local) {
-				size((int)(client.getLWidth()*scale), (int)(client.getLHeight()*scale), P2D);
-				client.setLocalDimensions((int)(ID*client.getLWidth()*scale), 0, (int)(client.getLWidth()*scale), (int)(client.getLHeight()*scale));
+				size((int) (client.getLWidth() * scale),
+						(int) (client.getLHeight() * scale), P2D);
+				client.setLocalDimensions(
+						(int) (ID * client.getLWidth() * scale), 0,
+						(int) (client.getLWidth() * scale),
+						(int) (client.getLHeight() * scale));
 			} else {
 				size(client.getLWidth(), client.getLHeight(), P2D);
 			}
-			
-			
+
 			// the size is determined by the client's local width and height
 			mWidth = client.getMWidth();
 			mHeight = client.getMHeight();
-			
+
 		} else {
 			// Otherwise with no library, force size
-			size(parseInt(11520*scale),parseInt(1080*scale), P2D);
+			size(parseInt(11520 * scale), parseInt(1080 * scale), P2D);
 			mWidth = 11520;
 			mHeight = 1080;
 		}
@@ -91,11 +98,11 @@ public class Gummies extends PApplet {
 		// the random seed must be identical for all clients
 		randomSeed(0);
 		noiseSeed(0);
-		
+
 		smooth();
 		frameRate(30);
 		background(255);
-		
+
 		stage = new Stage(this);
 
 		if (MPE) {
@@ -104,23 +111,24 @@ public class Gummies extends PApplet {
 		}
 	}
 
-	//--------------------------------------
+	// --------------------------------------
 	// Keep the motor running... draw() needs to be added in auto mode, even if
 	// it is empty to keep things rolling.
 	public void draw() {
 
 		// If we are on the 6 screens we want to preset the frame's location
 		if (MPE && local) {
-			frame.setLocation(ID*width,0);
+			frame.setLocation(ID * width, 0);
 		}
 
-		// If we're not using the library frameEvent() will not be called automatically
+		// If we're not using the library frameEvent() will not be called
+		// automatically
 		if (!MPE) {
 			frameEvent(null);
 		}
 	}
 
-	//--------------------------------------
+	// --------------------------------------
 	// Triggered by the client whenever a new frame should be rendered.
 	// All synchronized drawing should be done here when in auto mode.
 	public void frameEvent(TCPClient c) {
@@ -128,19 +136,53 @@ public class Gummies extends PApplet {
 		// Receiving a message for background color
 		if (MPE && c.messageAvailable()) {
 			String[] msg = c.getDataMessage();
-			int whichSkyline = parseInt(msg[0]);
-			stage.updateSkyline(whichSkyline);
+
+			whichSkyline = parseInt(msg[0]);
+			println("Which Skyline: " + whichSkyline);
+
+			if (whichSkyline != pWhichSkyline) {
+				stage.initSkyline(whichSkyline);
+				pWhichSkyline = whichSkyline;
+			}
+
+			whichPiece = parseInt(msg[1]);
+			println("Which Piece: " + whichPiece);
+
+			if (whichPiece != pWhichPiece) {
+				stage.init(whichPiece);
+				pWhichPiece = whichPiece;
+			}
 		}
 
 		// clear the screen
 		if (!MPE || local) {
 			scale(scale);
 		}
-				
+
 		stage.run();
 	}
-
-
+	
+	int bg = 0;
+	int piece = 0;
+	
+//	public void keyPressed() {
+//		if (keyCode == UP)
+//			bg++;
+//		else if (keyCode == DOWN)
+//			bg--;
+//		else if (keyCode == RIGHT)
+//			piece++;
+//		else if (keyCode == LEFT)
+//			piece--;
+//		
+//		if(keyCode == UP || keyCode == DOWN) {
+//			bg = constrain(bg, -1, 1);
+//			stage.initSkyline(bg);
+//		}
+//		else if(keyCode == RIGHT || keyCode == LEFT) {
+//			piece = constrain(piece, 0, 10);
+//			stage.init(piece);
+//		}
+//	}
 }
-
 
